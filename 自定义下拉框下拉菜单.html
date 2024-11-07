@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue 3 with Ant Design Vue Custom Dropdown</title>
+  <!-- 引入样式 -->
+
+    <!-- 引入vue -->
+    <!-- <script src="https://unpkg.com/vue"></script> -->
+     <script src="./vue@3.4.37_vue.global.js"></script>
+
+    <!-- 引入ant-design-vue -->
+     <link rel="stylesheet" href="./lib/ant-vue@4.2.3/dist/reset.min.css"></link>
+     <script  src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12dayjs.min.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12customParseFormat.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12weekday.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12localeData.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12weekOfYear.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12weekYear.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12advancedFormat.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dependence/dayjs/dayjs@1.11.12quarterOfYear.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dist/antd.js"></script>
+     <script src="./lib/ant-vue@4.2.3/dist/antd-with-locales.min.js"></script>
+     <script src="./lib/dayjs/locale/zh-cn.js"></script>
+  <style>
+    .my-custom-component {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <a-select
+      v-model:value="value"
+      placeholder="custom dropdown render"
+      style="width: 300px"
+      :options="items.map(item => ({ value: item }))"
+    >
+      <template #dropdownRender="{ menuNode: menu }">
+        <v-nodes :vnodes="menu" />
+        <a-divider style="margin: 4px 0" />
+        <a-space style="padding: 4px 8px">
+          <a-input ref="inputRef" v-model:value="name" placeholder="Please enter item" />
+          <a-button type="text" @click="addItem">
+            Add item
+          </a-button>
+        </a-space>
+      </template>
+    </a-select>
+  </div>
+
+  <script>
+    // 定义 VNodes 组件
+    const VNodes = Vue.defineComponent({
+      props: {
+        vnodes: {
+          type: Object,
+          required: true,
+        },
+      },
+      render() {
+        return this.vnodes;
+      },
+    });
+
+    // 创建 Vue 应用实例
+    const app = Vue.createApp({
+      components: {
+        VNodes,
+      },
+      data() {
+        return {
+          items: ['jack', 'lucy'],
+          value: null,
+          name: '',
+        };
+      },
+      methods: {
+        addItem(e) {
+          e.preventDefault();
+          console.log('addItem');
+          this.items.push(this.name || `New item ${this.items.length + 1}`);
+          this.name = '';
+          setTimeout(() => {
+            this.$refs.inputRef.focus();
+          }, 0);
+        },
+      },
+    });
+
+    // 挂载到 DOM 元素
+    app.use(antd).mount('#app');
+  </script>
+</body>
+</html>
